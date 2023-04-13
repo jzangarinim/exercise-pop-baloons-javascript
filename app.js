@@ -1,6 +1,6 @@
 // we declare a new global variable containing an array that represents the ballons map
 // you have to add more colors into the ballonsMap array
-let ballonsMap = ['green'];
+let color = ['green', 'blue', 'yellow', 'gray', 'red', 'violet', 'black'];
 
 // poping a balloon is basically turning his color to null (no color)
 const popBalloon = (position) => {
@@ -8,17 +8,37 @@ const popBalloon = (position) => {
     render();
 }
 
+let balloonAlive = 20;
+
+let start = "";
+
+for (let i = 0; i<balloonAlive; i++) {
+    const randomColor = color[Math.floor(Math.random() * color.length)]
+    let balloon = document.createElement("div");
+    balloon.classList.add("balloon", "balloon");
+    balloon.style.background = randomColor;
+    balloon.id = i;
+    balloon.addEventListener("click", e=> {
+        if (balloonAlive == 20) {
+            start = Date.now();
+        }
+        balloon.style.visibility= "hidden";
+        balloonAlive--
+        render();
+    })
+    document.querySelector("#balloon-map").appendChild(balloon);
+}
+
 const render = () => {
-    
-    // convert ballons map of colors into real html balloons
-    const ballons = ballonsMap.map((color, position) => {
-        return `<div class="balloon active"></div>`; // <--- render each balloon
-    });
+    document.querySelector("#balloon-count").innerHTML = balloonAlive; // <-- render the balloon count into the DOM
 
-    document.querySelector("#balloon-count").innerHTML = ballons.filter(b => b !== null).length; // <-- render the balloon count into the DOM
-    document.querySelector("#balloon-map").innerHTML = ballons.join(''); // <-- render the balloons into the DOM
-
-    if(activeBalloons == 0) window.location.reload(); // <--- reload website when no more balloons are left
+    if(balloonAlive == 0) {
+        console.log((Date.now() - start) / 1000);
+        document.querySelector("#balloon-map").innerHTML = `<h3> Te has demorado ${(Date.now() - start) / 1000} segundos</h3>`
+        setTimeout(()=>{
+            window.location.reload(); // <--- reload website when no more balloons are left
+        },5000) // Atrasa el reload por 2000 milisegundos, es decir ejecuta el código después de 2 segundos
+    }
 }
 
 // this makes the "render" function trigger when the website starts existing
